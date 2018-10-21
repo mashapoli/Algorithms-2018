@@ -2,6 +2,16 @@ package lesson1;
 
 import kotlin.NotImplementedError;
 
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.DoubleStream;
+
+import static java.lang.Math.abs;
+
 @SuppressWarnings("unused")
 public class JavaTasks {
     /**
@@ -32,7 +42,7 @@ public class JavaTasks {
      *
      * В случае обнаружения неверного формата файла бросить любое исключение.
      */
-    static public void sortTimes(String inputName, String outputName) {
+    static public void sortTimes(String inputName, String outputName)  {
         throw new NotImplementedError();
     }
 
@@ -96,9 +106,46 @@ public class JavaTasks {
      * 99.5
      * 121.3
      */
-    static public void sortTemperatures(String inputName, String outputName) {
-        throw new NotImplementedError();
+    static public void sortTemperatures(String inputName, String outputName) throws IOException {
+        int min = 5000;
+        int max = -2730;
+        try (BufferedReader br = new BufferedReader(new FileReader(inputName))) {
+            for (String line; (line = br.readLine()) != null; ) {
+                double temp = Double.valueOf(line);
+                int intTemp = (int) (temp * 10);
+                if (intTemp < min) {
+                    min = intTemp;
+                }
+                if (intTemp > max) {
+                    max = intTemp;
+                }
+            }
+        }
+        int[] buckets = new int[max - min + 1];
+        try (BufferedReader br = new BufferedReader(new FileReader(inputName))) {
+            for (String line; (line = br.readLine()) != null; ) {
+                double temp = Double.valueOf(line);
+                int intTemp = (int) (temp * 10);
+                buckets[intTemp - min]++;
+            }
+        }
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputName))) {
+            for (int bucketIdx = 0; bucketIdx < buckets.length; bucketIdx++) {
+                int bucketValue = buckets[bucketIdx]; //bucketIdx = temperature - min?
+                if (bucketValue != 0) {
+                    double doubTemp = (bucketIdx + min) / 10.0;
+                    for (int i = 0; i < bucketValue; i++) {
+                        writer.write(String.valueOf(doubTemp));
+                        writer.write("\n");
+                    }
+                }
+            }
+        }
+
     }
+
+
+
 
     /**
      * Сортировка последовательности
