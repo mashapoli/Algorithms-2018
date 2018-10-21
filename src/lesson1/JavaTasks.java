@@ -131,7 +131,7 @@ public class JavaTasks {
         }
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputName))) {
             for (int bucketIdx = 0; bucketIdx < buckets.length; bucketIdx++) {
-                int bucketValue = buckets[bucketIdx]; //bucketIdx = temperature - min?
+                int bucketValue = buckets[bucketIdx];
                 if (bucketValue != 0) {
                     double doubTemp = (bucketIdx + min) / 10.0;
                     for (int i = 0; i < bucketValue; i++) {
