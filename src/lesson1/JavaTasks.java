@@ -3,14 +3,6 @@ package lesson1;
 import kotlin.NotImplementedError;
 
 import java.io.*;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.DoubleStream;
-
-import static java.lang.Math.abs;
 
 @SuppressWarnings("unused")
 public class JavaTasks {
@@ -112,6 +104,10 @@ public class JavaTasks {
         try (BufferedReader br = new BufferedReader(new FileReader(inputName))) {
             for (String line; (line = br.readLine()) != null; ) {
                 double temp = Double.valueOf(line);
+                String strTemp = String.valueOf(temp);
+                if ((temp < -273.0 || temp > 500.0)||(!strTemp.matches("[\\+-]?0*\\d+\\.\\d"))){
+                    throw new IllegalArgumentException();
+                }
                 int intTemp = (int) (temp * 10);
                 if (intTemp < min) {
                     min = intTemp;
