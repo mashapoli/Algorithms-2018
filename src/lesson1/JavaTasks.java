@@ -103,11 +103,14 @@ public class JavaTasks {
         int max = -2730;
         try (BufferedReader br = new BufferedReader(new FileReader(inputName))) {
             for (String line; (line = br.readLine()) != null; ) {
-                double temp = Double.valueOf(line);
-                String strTemp = String.valueOf(temp);
-                if ((temp < -273.0 || temp > 500.0)||(!strTemp.matches("[\\+-]?0*\\d+\\.\\d"))){
-                    throw new IllegalArgumentException();
+                if (!line.matches("[\\+-]?0*\\d+\\.\\d")) {
+                    throw new IllegalArgumentException("Invalid format");
                 }
+                double temp = Double.valueOf(line);
+                if ((temp < -273.0 || temp > 500.0)) {
+                    throw new IllegalArgumentException("Wrong range");
+                }
+                String strTemp = String.valueOf(temp);
                 int intTemp = (int) (temp * 10);
                 if (intTemp < min) {
                     min = intTemp;

@@ -4,6 +4,7 @@ import java.io.BufferedWriter
 import java.io.File
 import java.util.*
 import kotlin.math.abs
+import kotlin.test.assertEquals
 
 abstract class AbstractTaskTests : AbstractFileTests() {
 
@@ -82,6 +83,17 @@ abstract class AbstractTaskTests : AbstractFileTests() {
     }
 
     protected fun sortTemperatures(sortTemperatures: (String, String) -> Unit) {
+        try {
+            sortTemperatures("input/test_temp1.txt", "temp.txt")
+        } catch (e: IllegalArgumentException){
+            assertEquals("Invalid format", e.message)
+        }
+        try {
+            sortTemperatures("input/test_temp2.txt", "temp.txt")
+        } catch (e: IllegalArgumentException) {
+            assertEquals("Wrong range", e.message)
+        }
+
         try {
             sortTemperatures("input/temp_in1.txt", "temp.txt")
             assertFileContent("temp.txt",
