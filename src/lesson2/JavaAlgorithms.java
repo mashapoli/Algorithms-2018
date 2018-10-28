@@ -3,6 +3,7 @@ package lesson2;
 import kotlin.NotImplementedError;
 import kotlin.Pair;
 
+import java.lang.reflect.Array;
 import java.util.Set;
 
 @SuppressWarnings("unused")
@@ -96,8 +97,32 @@ public class JavaAlgorithms {
      * Если имеется несколько самых длинных общих подстрок одной длины,
      * вернуть ту из них, которая встречается раньше в строке first.
      */
-    static public String longestCommonSubstring(String firs, String second) {
-        throw new NotImplementedError();
+    static public String longestCommonSubstring(String first, String second) {
+        int firstLen = first.length();
+        int secondLen = second.length();
+        int maxLen = 0;
+        int endIdx = -1;
+        int[][] similarityTable = new int[firstLen][secondLen];
+        for (int i = 0; i < firstLen; i++) {
+            for (int j = 0; j < secondLen; j++) {
+                if (first.charAt(i) == second.charAt(j)) {
+                    if (i == 0 || j == 0) {
+                        similarityTable[i][j] = 1;
+                    } else {
+                        similarityTable[i][j] = similarityTable[i - 1][j - 1] + 1;
+                    }
+                }
+                if (similarityTable[i][j] > maxLen) {
+                    maxLen = similarityTable[i][j];
+                    endIdx = i;
+                }
+            }
+        }
+        if (maxLen == 0) {
+            return "";
+        }
+        int beginIdx = endIdx + 1 - maxLen;
+        return first.substring(beginIdx, endIdx + 1);
     }
 
     /**
