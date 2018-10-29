@@ -25,6 +25,11 @@ abstract class AbstractTaskTests : AbstractFileTests() {
             File("temp.txt").delete()
         }
         try {
+            sortTimes("input/test_time1.txt", "temp.txt")
+        } catch (e: IllegalArgumentException) {
+            assertEquals("Invalid format", e.message)
+        }
+        try {
             sortTimes("input/time_in2.txt", "temp.txt")
             assertFileContent("temp.txt",
                     """

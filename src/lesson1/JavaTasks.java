@@ -3,6 +3,13 @@ package lesson1;
 import kotlin.NotImplementedError;
 
 import java.io.*;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 @SuppressWarnings("unused")
 public class JavaTasks {
@@ -34,34 +41,65 @@ public class JavaTasks {
      *
      * В случае обнаружения неверного формата файла бросить любое исключение.
      */
-    static public void sortTimes(String inputName, String outputName)  {
-        throw new NotImplementedError();
+    static public void sortTimes(String inputName, String outputName) throws IOException {
+        List<Integer> list = new ArrayList<>();
+        try (BufferedReader br = new BufferedReader(new FileReader(inputName))) {
+            for (String line; (line = br.readLine()) != null; ) {
+                if (!line.matches("[0-2]\\d:[0-6]\\d:[0-6]\\d")) {
+                    throw new IllegalArgumentException("Invalid format");
+                }
+                int res = 0;
+                String[] parts = line.split(":");
+                for (int i = 0; i < parts.length; i++) {
+                    res = res * 60 + Integer.parseInt(String.valueOf(parts[i]));
+                    if (i == parts.length - 1) {
+                        list.add(res);
+                        res = 0;
+                    }
+                }
+            }
+        }
+        list.sort(Comparator.naturalOrder());
+        StringBuilder stringBuilder = new StringBuilder();
+        int listSize = list.size();
+        int hour;
+        int minute;
+        int second;
+        for (int i = 0; i < listSize; i++) {
+            int seconds = list.get(i);
+            hour = seconds / 3600;
+            minute = (seconds % 3600) / 60;
+            second = seconds % 60;
+            stringBuilder.append(String.format("%02d:%02d:%02d", hour, minute, second));
+            stringBuilder.append("\n");
+        }
+        Files.write(Paths.get(outputName), Collections.singleton(stringBuilder), Charset.defaultCharset());
     }
 
     /**
      * Сортировка адресов
-     *
+     * <p>
      * Средняя
-     *
+     * <p>
      * Во входном файле с именем inputName содержатся фамилии и имена жителей города с указанием улицы и номера дома,
      * где они прописаны. Пример:
-     *
+     * <p>
      * Петров Иван - Железнодорожная 3
      * Сидоров Петр - Садовая 5
      * Иванов Алексей - Железнодорожная 7
      * Сидорова Мария - Садовая 5
      * Иванов Михаил - Железнодорожная 7
-     *
+     * <p>
      * Людей в городе может быть до миллиона.
-     *
+     * <p>
      * Вывести записи в выходной файл outputName,
      * упорядоченными по названию улицы (по алфавиту) и номеру дома (по возрастанию).
      * Людей, живущих в одном доме, выводить через запятую по алфавиту (вначале по фамилии, потом по имени). Пример:
-     *
+     * <p>
      * Железнодорожная 3 - Петров Иван
      * Железнодорожная 7 - Иванов Алексей, Иванов Михаил
      * Садовая 5 - Сидоров Петр, Сидорова Мария
-     *
+     * <p>
      * В случае обнаружения неверного формата файла бросить любое исключение.
      */
     static public void sortAddresses(String inputName, String outputName) {
