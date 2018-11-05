@@ -3,7 +3,12 @@ package lesson2;
 import kotlin.NotImplementedError;
 import kotlin.Pair;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 @SuppressWarnings("unused")
@@ -32,8 +37,29 @@ public class JavaAlgorithms {
      *
      * В случае обнаружения неверного формата файла бросить любое исключение.
      */
-    static public Pair<Integer, Integer> optimizeBuyAndSell(String inputName) {
-        throw new NotImplementedError();
+    static public Pair<Integer, Integer> optimizeBuyAndSell(String inputName) throws IOException {
+        List<Integer> list = new ArrayList<>();
+        Pair<Integer, Integer> res = new Pair<>(0, 0);
+        try (BufferedReader br = new BufferedReader(new FileReader(inputName))) {
+            for (String line; (line = br.readLine()) != null; ) {
+                if (!line.matches("[1-9]\\d*")) {
+                    throw new IllegalArgumentException("Invalid format");
+                } else {
+                    list.add(Integer.valueOf(line));
+                }
+            }
+        }
+        int best = 0;
+        int listSize = list.size();
+        for (int buy = 0; buy < listSize - 1; buy++) {
+            for (int sale = buy + 1; sale < listSize; sale++) {
+                if (list.get(sale) - list.get(buy) > best) {
+                    best = list.get(sale) - list.get(buy);
+                    res = new Pair<>(buy + 1, sale + 1);
+                }
+            }
+        }
+        return res;
     }
 
     /**

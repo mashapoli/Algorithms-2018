@@ -43,6 +43,16 @@ abstract class AbstractAlgorithmsTests {
     }
 
     fun optimizeBuyAndSell(optimizeBuyAndSell: (String) -> Pair<Int, Int>) {
+        try {
+            optimizeBuyAndSell("input/test_buysell1.txt")
+        } catch (e: IllegalArgumentException) {
+            assertEquals("Invalid format", e.message)
+        }
+        try {
+            optimizeBuyAndSell("input/test_buysell2.txt")
+        } catch (e: IllegalArgumentException) {
+            assertEquals("Invalid format", e.message)
+        }
         assertEquals(3 to 4, optimizeBuyAndSell("input/buysell_in1.txt"))
         assertEquals(8 to 12, optimizeBuyAndSell("input/buysell_in2.txt"))
         assertEquals(3 to 4, optimizeBuyAndSell("input/buysell_in3.txt"))
