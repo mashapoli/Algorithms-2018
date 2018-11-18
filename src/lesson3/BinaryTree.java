@@ -37,12 +37,10 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
         Node<T> newNode = new Node<>(t);
         if (closest == null) {
             root = newNode;
-        }
-        else if (comparison < 0) {
+        } else if (comparison < 0) {
             assert closest.left == null;
             closest.left = newNode;
-        }
-        else {
+        } else {
             assert closest.right == null;
             closest.right = newNode;
         }
@@ -67,14 +65,14 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
      */
     @Override
     public boolean remove(Object o) {
-        if(root == null){
+        if (root == null) {
             return false;
         }
         T key = (T) o;
         Node<T> current = root;
         Node<T> parent = root;
         boolean isLeftChild = true;
-        if(key == null){
+        if (key == null) {
             return false;
         }
 
@@ -100,9 +98,7 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
             } else {
                 parent.right = null;
             }
-        }
-
-        else if (current.right == null) {
+        } else if (current.right == null) {
             if (current == root) {
                 root = current.left;
             } else if (isLeftChild) {
@@ -116,9 +112,7 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
                 parent.left = current.right;
             } else
                 parent.right = current.right;
-        }
-
-        else {
+        } else {
             Node successor = getSuccessor(current);
 
             if (current == root) {
@@ -168,12 +162,10 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
         int comparison = value.compareTo(start.value);
         if (comparison == 0) {
             return start;
-        }
-        else if (comparison < 0) {
+        } else if (comparison < 0) {
             if (start.left == null) return start;
             return find(start.left, value);
-        }
-        else {
+        } else {
             if (start.right == null) return start;
             return find(start.right, value);
         }
@@ -189,8 +181,9 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
             values = new ArrayList<>();
             inOrder(root, values);
         }
-        private void inOrder(Node<T> localRoot, final ArrayList<Node<T>> values){
-            if(localRoot != null){
+
+        private void inOrder(Node<T> localRoot, final ArrayList<Node<T>> values) {
+            if (localRoot != null) {
                 inOrder(localRoot.left, values);
                 values.add(localRoot);
                 inOrder(localRoot.right, values);
@@ -203,9 +196,9 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
          */
         private Node<T> findNext() {
             curIdx++;
-            if (curIdx == values.size()){
+            if (curIdx >= values.size()) {
                 return null;
-            }else {
+            } else {
                 return values.get(curIdx);
             }
 
@@ -213,13 +206,15 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
 
         @Override
         public boolean hasNext() {
-            return values.size() > 0 && curIdx != values.size() - 1;
+            return values.size() > 0 && curIdx < values.size() - 1;
         }
 
         @Override
         public T next() {
             current = findNext();
-            if (current == null) throw new NoSuchElementException();
+            if (current == null) {
+                throw new NoSuchElementException();
+            }
             return current.value;
         }
 
@@ -231,6 +226,7 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
         public void remove() {
             BinaryTree.this.remove(current.value);
             values.remove(current);
+
         }
     }
 
