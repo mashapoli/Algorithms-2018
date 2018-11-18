@@ -67,11 +67,16 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
      */
     @Override
     public boolean remove(Object o) {
-
+        if(root == null){
+            return false;
+        }
         T key = (T) o;
         Node<T> current = root;
         Node<T> parent = root;
         boolean isLeftChild = true;
+        if(key == null){
+            return false;
+        }
 
         while (!current.value.equals(key)) {
             parent = current;
@@ -112,7 +117,7 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
             } else
                 parent.right = current.right;
         }
-        
+
         else {
             Node successor = getSuccessor(current);
 
@@ -224,8 +229,8 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
          */
         @Override
         public void remove() {
-            // TODO
-            throw new NotImplementedError();
+            BinaryTree.this.remove(current.value);
+            values.remove(current);
         }
     }
 

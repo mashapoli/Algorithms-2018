@@ -56,13 +56,6 @@ class BinaryTreeTest {
             for (i in 1..20) {
                 list.add(random.nextInt(100))
             }
-//            list.add(80)
-//            list.add(52)
-//            list.add(48)
-//            list.add(71)
-//            list.add(63)
-//            list.add(67)
-
             val treeSet = TreeSet<Int>()
             val binarySet = create()
             for (element in list) {
@@ -70,7 +63,6 @@ class BinaryTreeTest {
                 binarySet += element
             }
             val toRemove = list[random.nextInt(list.size)]
-//            val toRemove = 71
             treeSet.remove(toRemove)
             binarySet.remove(toRemove)
             println("Removing $toRemove from $list")
@@ -83,6 +75,46 @@ class BinaryTreeTest {
             }
             assertTrue(binarySet.checkInvariant())
         }
+    }
+    private fun testRemoveFromEmptyTree(create: () -> CheckableSortedSet<Int>) {
+        val binarySet = create();
+        assertFalse(binarySet.remove(1))
+        assertEquals<Set<*>>(emptySet<Int>(), binarySet)
+        assertEquals(0, binarySet.size)
+    }
+
+    @Test
+    fun testRemoveFromEmptyTreeJava() {
+        testRemoveFromEmptyTree { createJavaTree() }
+    }
+
+    private fun testRemoveNonExistentElement(create: () -> CheckableSortedSet<Int>) {
+        val binarySet = create();
+        binarySet += 2;
+        binarySet += 1;
+        binarySet += 3;
+        assertFalse(binarySet.remove(4))
+        assertEquals<SortedSet<*>>(sortedSetOf<Int>(1, 2, 3), binarySet)
+        assertEquals(3, binarySet.size)
+    }
+    @Test
+    fun testRemoveNonExistentElementJava() {
+        testRemoveNonExistentElement { createJavaTree() }
+    }
+
+    private fun testRemoveFromEmpty(create: () -> CheckableSortedSet<Int>) {
+        val binarySet = create();
+        binarySet += 2;
+        binarySet += 1;
+        binarySet += 3;
+        assertFalse(binarySet.remove(null))
+        assertEquals<SortedSet<*>>(sortedSetOf<Int>(1, 2, 3), binarySet)
+        assertEquals(3, binarySet.size)
+
+    }
+    @Test
+    fun testRemoveFromEmptyJava() {
+        testRemoveFromEmpty { createJavaTree() }
     }
 
     @Test
@@ -118,6 +150,39 @@ class BinaryTreeTest {
             }
         }
     }
+
+    private fun testIteratorNull(create: () -> CheckableSortedSet<Int>) {
+        val binarySet = create()
+        val binaryIt = binarySet.iterator()
+        assertFalse(binaryIt.hasNext())
+        try {
+            binaryIt.next()
+            assertTrue(false, "Should throw exception")
+        } catch (e: NoSuchElementException) {
+
+        }
+    }
+    @Test
+    fun testIteratorNullJava() {
+        testIteratorNull { createJavaTree() }
+    }
+
+    private fun testIteratorOverflow(create: () -> CheckableSortedSet<Int>) {
+        val binarySet = create()
+        val binaryIt = binarySet.iterator()
+        binarySet +=2
+        binarySet +=1
+        binarySet +=3
+        try {
+            binaryIt.next()
+            assertTrue(false, "Should throw exception")
+        } catch (e: NoSuchElementException) {}
+    }
+    @Test
+    fun testIteratorOverflowJava() {
+        testIteratorOverflow { createJavaTree() }
+    }
+
 
     @Test
     @Tag("Normal")
@@ -165,6 +230,23 @@ class BinaryTreeTest {
             }
             assertTrue(binarySet.checkInvariant())
         }
+    }
+
+    private fun testIteratorRemove1(create: () -> CheckableSortedSet<Int>) {
+        val binarySet = create()
+        binarySet += 2
+        binarySet += 1
+        binarySet += 3
+        val iterator = binarySet.iterator()
+        iterator.next()
+        iterator.remove()
+        val element = iterator.next()
+        assertEquals(3, element)
+
+    }
+    @Test
+    fun testIteratorRemoveJava1() {
+        testIteratorRemove1 { createJavaTree() }
     }
 
     @Test
