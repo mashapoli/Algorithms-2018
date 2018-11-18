@@ -66,46 +66,44 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
      * Средняя
      */
     @Override
-    public boolean remove(Object o) { //удаление с заданным ключом
+    public boolean remove(Object o) {
         T key = (T) o;
         Node<T> current = root;
         Node<T> parent = root;
         boolean isLeftChild = true;
 
-        while (!current.value.equals(key)) { //поиск узла
+        while (!current.value.equals(key)) {
             parent = current;
-            if (key.compareTo(current.value) < 0) {//двигаться налево?
+            if (key.compareTo(current.value) < 0) {
                 isLeftChild = true;
                 current = current.left;
-            } else {                    // или направо?
+            } else {
                 isLeftChild = false;
                 current = current.right;
             }
-            if (current == null) {  //конец цепочки
+            if (current == null) {
                 return false;
             }
         }
+        System.out.println("par" + parent== null? null : parent.value);
+        System.out.println("cur" + current== null? null : current.value);
 
         if (current.left == null && current.right == null) {
             if (current == root) {
-                root = null;                    //узел явл корневым, дерево очищается
+                root = null;
             } else if (isLeftChild) {
-                parent.left = null;                 //узел отпучковывается от рода
+                parent.left = null;
             } else {
                 parent.right = null;
             }
-        }
-        //нет правого потомка, узел меняется левым
-        else if (current.right == null) {
+        } else if (current.right == null) {
             if (current == root) {
                 root = current.left;
             } else if (isLeftChild) {
                 parent.left = current.left;
             } else
                 parent.right = current.right;
-        }
-        //нет левого, меняется на правый
-        else if (current.left == null) {
+        } else if (current.left == null) {
             if (current == root) {
                 root = current.right;
             } else if (isLeftChild) {
@@ -126,7 +124,7 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
             }
             successor.left = current.left;
         }
-//        size --;
+        size --;
         return true;
     }
 
@@ -209,7 +207,7 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
 
         @Override
         public boolean hasNext() {
-            return findNext() != null;
+            return values.size() > 0 && curIdx != values.size() - 1;
         }
 
         @Override

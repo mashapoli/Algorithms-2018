@@ -53,20 +53,26 @@ class BinaryTreeTest {
         val random = Random()
         for (iteration in 1..100) {
             val list = mutableListOf<Int>()
-            for (i in 1..20) {
-                list.add(random.nextInt(100))
-            }
+//            for (i in 1..20) {
+//                list.add(random.nextInt(100))
+//            }
+            list.add(10)
+            list.add(5)
+            list.add(3)
+            list.add(7)
+
             val treeSet = TreeSet<Int>()
             val binarySet = create()
             for (element in list) {
                 treeSet += element
                 binarySet += element
             }
-            val toRemove = list[random.nextInt(list.size)]
+//            val toRemove = list[random.nextInt(list.size)]
+            val toRemove = 7
             treeSet.remove(toRemove)
             binarySet.remove(toRemove)
             println("Removing $toRemove from $list")
-            assertEquals<SortedSet<*>>(treeSet, binarySet, "After removal of $toRemove from $list")
+            assertEquals<SortedSet<*>>(treeSet, binarySet.toSortedSet(), "After removal of $toRemove from $list")
             assertEquals(treeSet.size, binarySet.size)
             for (element in list) {
                 val inn = element != toRemove
