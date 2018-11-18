@@ -67,6 +67,7 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
      */
     @Override
     public boolean remove(Object o) {
+
         T key = (T) o;
         Node<T> current = root;
         Node<T> parent = root;
@@ -85,8 +86,6 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
                 return false;
             }
         }
-        System.out.println("par" + parent== null? null : parent.value);
-        System.out.println("cur" + current== null? null : current.value);
 
         if (current.left == null && current.right == null) {
             if (current == root) {
@@ -96,13 +95,15 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
             } else {
                 parent.right = null;
             }
-        } else if (current.right == null) {
+        }
+
+        else if (current.right == null) {
             if (current == root) {
                 root = current.left;
             } else if (isLeftChild) {
                 parent.left = current.left;
             } else
-                parent.right = current.right;
+                parent.right = current.left;
         } else if (current.left == null) {
             if (current == root) {
                 root = current.right;
@@ -110,11 +111,11 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
                 parent.left = current.right;
             } else
                 parent.right = current.right;
-        } else {                                //2 потомка, узел заменяется преемником
-            // поиск преемника для удаляемого узла
+        }
+        
+        else {
             Node successor = getSuccessor(current);
 
-            //родитель связывается с посредником
             if (current == root) {
                 root = successor;
             } else if (isLeftChild) {
@@ -124,7 +125,7 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
             }
             successor.left = current.left;
         }
-        size --;
+        size--;
         return true;
     }
 
