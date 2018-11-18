@@ -26,6 +26,7 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
 
     private int size = 0;
 
+
     @Override
     public boolean add(T t) {
         Node<T> closest = find(t);
@@ -65,9 +66,85 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
      * Средняя
      */
     @Override
-    public boolean remove(Object o) {
-        // TODO
-        throw new NotImplementedError();
+    public boolean remove(Object o) { //удаление с заданным ключом
+        T key = (T) o;
+        Node<T> current = root;
+        Node<T> parent = root;
+        boolean isLeftChild = true;
+
+        while (!current.value.equals(key)) { //поиск узла
+            parent = current;
+            if (key.compareTo(current.value) < 0) {//двигаться налево?
+                isLeftChild = true;
+                current = current.left;
+            } else {                    // или направо?
+                isLeftChild = false;
+                current = current.right;
+            }
+            if (current == null) {  //конец цепочки
+                return false;
+            }
+        }
+
+        if (current.left == null && current.right == null) {
+            if (current == root) {
+                root = null;                    //узел явл корневым, дерево очищается
+            } else if (isLeftChild) {
+                parent.left = null;                 //узел отпучковывается от рода
+            } else {
+                parent.right = null;
+            }
+        }
+        //нет правого потомка, узел меняется левым
+        else if (current.right == null) {
+            if (current == root) {
+                root = current.left;
+            } else if (isLeftChild) {
+                parent.left = current.left;
+            } else
+                parent.right = current.right;
+        }
+        //нет левого, меняется на правый
+        else if (current.left == null) {
+            if (current == root) {
+                root = current.right;
+            } else if (isLeftChild) {
+                parent.left = current.right;
+            } else
+                parent.right = current.right;
+        } else {                                //2 потомка, узел заменяется преемником
+            // поиск преемника для удаляемого узла
+            Node successor = getSuccessor(current);
+
+            //родитель связывается с посредником
+            if (current == root) {
+                root = successor;
+            } else if (isLeftChild) {
+                parent.left = successor;
+            } else {
+                parent.right = successor;
+            }
+            successor.left = current.left;
+        }
+//        size --;
+        return true;
+    }
+
+    private Node<T> getSuccessor(Node<T> delNode) {
+        Node<T> successorParent = delNode;
+        Node<T> successor = delNode;
+        Node<T> current = delNode.right;
+
+        while (current != null) {
+            successorParent = successor;
+            successor = current;
+            current = current.left;
+        }
+        if (successor != delNode.right) {
+            successorParent.left = successor.right;
+            successor.right = delNode.right;
+        }
+        return successor;
     }
 
     @Override
@@ -101,16 +178,33 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
     public class BinaryTreeIterator implements Iterator<T> {
 
         private Node<T> current = null;
+        private final ArrayList<Node<T>> values;
+        private int curIdx = -1;
 
-        private BinaryTreeIterator() {}
+        private BinaryTreeIterator() {
+            values = new ArrayList<>();
+            inOrder(root, values);
+        }
+        private void inOrder(Node<T> localRoot, final ArrayList<Node<T>> values){
+            if(localRoot != null){
+                inOrder(localRoot.left, values);
+                values.add(localRoot);
+                inOrder(localRoot.right, values);
+            }
+        }
 
         /**
          * Поиск следующего элемента
          * Средняя
          */
         private Node<T> findNext() {
-            // TODO
-            throw new NotImplementedError();
+            curIdx++;
+            if (curIdx == values.size()){
+                return null;
+            }else {
+                return values.get(curIdx);
+            }
+
         }
 
         @Override
