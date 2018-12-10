@@ -4,6 +4,9 @@ import kotlin.NotImplementedError;
 
 import java.util.List;
 
+import static java.lang.Math.addExact;
+import static java.lang.Math.max;
+
 @SuppressWarnings("unused")
 public class JavaDynamicTasks {
     /**
@@ -18,8 +21,40 @@ public class JavaDynamicTasks {
      * При сравнении подстрок, регистр символов *имеет* значение.
      */
     public static String longestCommonSubSequence(String first, String second) {
-        throw new NotImplementedError();
+        int n_first = first.length();
+        int m_second = second.length();
+        int max_len[][] = new int[n_first + 1][m_second + 1];
+        for (int i = 0; i < n_first + 1; i++) {
+            for (int j = 0; j < m_second + 1; j++) {
+                if (i == 0 || j == 0) {
+                    max_len[i][j] = 0; //если какая-то строка пустая
+                } else if (first.charAt(i - 1) == second.charAt(j - 1)) {
+                    max_len[i][j] = max_len[i - 1][j - 1] + 1; //последние символы строк совпадают,отбрасываем последние символы рассматриваемых строк и +1
+                } else {
+                    max_len[i][j] = Math.max(max_len[i - 1][j], max_len[i][j - 1]); //отбрасываем по одному символу от конца строк
+                }
+            }
+        }
+
+        StringBuffer res = new StringBuffer(Math.max(n_first, m_second));
+        int i = n_first;
+        int j = m_second;
+        while (i > 0 && j > 0) {//обратный проход
+            if (first.charAt(i - 1) == second.charAt(j - 1)) {
+                res.append(first.charAt(i - 1));
+                i--;
+                j--;
+            } else if (max_len[i - 1][j] == max_len[i][j]) {
+                i--;
+            } else {
+                j--;
+            }
+        }
+        return res.reverse().toString();
+
     }
+
+
 
     /**
      * Наибольшая возрастающая подпоследовательность
