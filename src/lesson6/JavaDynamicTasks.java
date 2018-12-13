@@ -77,9 +77,6 @@ public class JavaDynamicTasks {
             return list;
         }
         int len = list.size();
-        if (len == 1) {
-            return new ArrayList<>(list);
-        }
         int[] dp = new int[len];
         int[] prev = new int[len];
         for (int i = 0; i < len; i++) {
@@ -115,9 +112,6 @@ public class JavaDynamicTasks {
             return list;
         }
         int len = list.size();
-        if (len == 1) {
-            return new ArrayList<>(list);
-        }
         int[] dp = new int[len + 1];
         int[] pos = new int[len + 1];
         int[] prev = new int[len];
