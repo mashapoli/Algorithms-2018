@@ -2,6 +2,10 @@ package lesson6;
 
 import kotlin.NotImplementedError;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static java.lang.Math.addExact;
@@ -27,19 +31,19 @@ public class JavaDynamicTasks {
         for (int i = 0; i < lenFirst + 1; i++) {
             for (int j = 0; j < lenSecond + 1; j++) {
                 if (i == 0 || j == 0) {
-                    maxLen[i][j] = 0; //если какая-то строка пустая
+                    maxLen[i][j] = 0;
                 } else if (first.charAt(i - 1) == second.charAt(j - 1)) {
-                    maxLen[i][j] = maxLen[i - 1][j - 1] + 1; //последние символы строк совпадают,отбрасываем последние символы рассматриваемых строк и +1
+                    maxLen[i][j] = maxLen[i - 1][j - 1] + 1;
                 } else {
-                    maxLen[i][j] = Math.max(maxLen[i - 1][j], maxLen[i][j - 1]); //отбрасываем по одному символу от конца строк
+                    maxLen[i][j] = Math.max(maxLen[i - 1][j], maxLen[i][j - 1]);
                 }
             }
         }
 
-        StringBuffer res = new StringBuffer(Math.max(lenFirst, lenSecond));
+        StringBuilder res = new StringBuilder(Math.max(lenFirst, lenSecond));
         int i = lenFirst;
         int j = lenSecond;
-        while (i > 0 && j > 0) {//обратный проход
+        while (i > 0 && j > 0) {
             if (first.charAt(i - 1) == second.charAt(j - 1)) {
                 res.append(first.charAt(i - 1));
                 i--;
@@ -69,7 +73,81 @@ public class JavaDynamicTasks {
      * В примере ответами являются 2, 8, 9, 12 или 2, 5, 9, 12 -- выбираем первую из них.
      */
     public static List<Integer> longestIncreasingSubSequence(List<Integer> list) {
-        throw new NotImplementedError();
+        if (list.isEmpty()) {
+            return list;
+        }
+        int len = list.size();
+        if (len == 1) {
+            return new ArrayList<>(list);
+        }
+        int[] dp = new int[len];
+        int[] prev = new int[len];
+        for (int i = 0; i < len; i++) {
+            dp[i] = 1;
+            prev[i] = -1;
+            for (int j = 0; j < i; j++) {
+                if (list.get(j) < list.get(i) && (dp[j] + 1) > dp[i]) {
+                    dp[i] = dp[j] + 1;
+                    prev[i] = j;
+                }
+            }
+        }
+        int pos = 0;
+        int lisLen = dp[0];
+        for (int i = 0; i < len; i++) {
+            if (dp[i] > lisLen) {
+                pos = i;
+                lisLen = dp[i];
+            }
+        }
+
+        List<Integer> answer = new ArrayList<>();
+        while (pos != -1) {
+            answer.add(list.get(pos));
+            pos = prev[pos];
+        }
+        Collections.reverse(answer);
+        return answer;
+    }
+
+    public static List<Integer> longestIncreasingSubSequenceONLogN(List<Integer> list) {
+        if (list.isEmpty()) {
+            return list;
+        }
+        int len = list.size();
+        if (len == 1) {
+            return new ArrayList<>(list);
+        }
+        int[] dp = new int[len + 1];
+        int[] pos = new int[len + 1];
+        int[] prev = new int[len];
+        int lisLen = 0;
+        pos[0] = -1;
+        dp[0] = Integer.MIN_VALUE;
+        for (int i = 1; i < len + 1; i++) {
+            dp[i] = Integer.MAX_VALUE;
+        }
+        for (int i = 0; i < len; i++) {
+            int j = Arrays.binarySearch(dp, list.get(i));
+            if (j < 0) {
+                j = -(j + 1);
+            }
+            if (dp[j - 1] < list.get(i) && list.get(i) < dp[j]) {
+                dp[j] = list.get(i);
+                pos[j] = i;
+                prev[i] = pos[j - 1];
+                lisLen = Math.max(lisLen, j);
+            }
+        }
+
+        List<Integer> answer = new ArrayList<>();
+        int p = pos[lisLen];
+        while (p != -1) {
+            answer.add(list.get(p));
+            p = prev[p];
+        }
+        Collections.reverse(answer);
+        return answer;
     }
 
     /**

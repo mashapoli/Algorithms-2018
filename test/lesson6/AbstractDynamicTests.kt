@@ -48,6 +48,19 @@ abstract class AbstractDynamicTests {
                 45, 76, 15, 99, 100, 88, 84, 35, 88
         )))
     }
+    fun longestIncreasingSubSequenceONLogN(longestIncreasingSubSequenceONLogN: (List<Int>) -> List<Int>) {
+        assertEquals(listOf(), longestIncreasingSubSequenceONLogN(listOf()))
+        assertEquals(listOf(1), longestIncreasingSubSequenceONLogN(listOf(1)))
+        assertEquals(listOf(1, 2), longestIncreasingSubSequenceONLogN(listOf(1, 2)))
+        assertEquals(listOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10),
+                longestIncreasingSubSequenceONLogN(listOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10))
+        )
+        assertEquals(listOf(2, 5, 9, 12), longestIncreasingSubSequenceONLogN(listOf(2, 8, 5, 9, 12, 6)))
+        assertEquals(listOf(23, 34, 56, 87, 91, 94, 99, 100), longestIncreasingSubSequenceONLogN(listOf(
+                23, 76, 34, 93, 123, 21, 56, 87, 91, 12, 45, 98, 140, 12, 5, 38, 349, 65, 94,
+                45, 76, 15, 99, 100, 88, 84, 35, 88
+        )))
+    }
 
     fun shortestPathOnField(shortestPathOnField: (String) -> Int) {
         assertEquals(1, shortestPathOnField("input/field_in2.txt"))
